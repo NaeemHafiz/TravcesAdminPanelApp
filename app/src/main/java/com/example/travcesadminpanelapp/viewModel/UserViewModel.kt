@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.travcesadminpanelapp.data.remote.base.ApiErrorResponse
 import com.example.travcesadminpanelapp.data.remote.travces.UserDataSource
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.LoginData
-import com.example.travcesadminpanelapp.data.remote.travces.model.response.GetChildResponse
+import com.example.travcesadminpanelapp.data.remote.travces.model.response.GetDriverResponse
 import com.example.travcesadminpanelapp.repository.UserRepository
 import com.example.travcesadminpanelapp.utils.extensions.OneShotEvent
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
@@ -23,7 +23,7 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
     )
     var loginResponse: MutableLiveData<OneShotEvent<LoginData>> = MutableLiveData()
     var updateLocationResponse: MutableLiveData<OneShotEvent<Location>> = MutableLiveData()
-    var getChildrenResponse: MutableLiveData<OneShotEvent<GetChildResponse>> = MutableLiveData()
+    var getChildrenResponse: MutableLiveData<OneShotEvent<GetDriverResponse>> = MutableLiveData()
 
     fun login(phone: String, password: String) {
         showProgressBar(true)
@@ -96,7 +96,7 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
         showProgressBar(true)
         userRepository.getChildren(driver_id,
             object : UserDataSource.GetChildrenCallback {
-                override fun onGetChildrenResponse(data: GetChildResponse) {
+                override fun onGetChildrenResponse(data: GetDriverResponse) {
                     showProgressBar(false)
                     getChildrenResponse.value = OneShotEvent(data)
                 }

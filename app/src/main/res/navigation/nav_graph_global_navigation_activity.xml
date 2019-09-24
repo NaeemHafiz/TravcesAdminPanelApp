@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/nav_graph_global_navigation_activity"
-        app:startDestination="@id/homeFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_global_navigation_activity"
+    app:startDestination="@id/homeFragment">
 
     <fragment
-            android:id="@+id/homeFragment"
-            android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.HomeFragment"
-            android:label="Home"
-            tools:layout="@layout/fragment_home" >
+        android:id="@+id/homeFragment"
+        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_trackDriverFragment"
             app:destination="@id/trackDriverFragment" />
@@ -25,22 +25,22 @@
     </fragment>
     <fragment
         android:id="@+id/trackDriverFragment"
-        android:name="com.example.travcesadminpanelapp.TrackDriverFragment"
-        android:label="fragment_track_driver"
+        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.TrackDriverFragment"
+        android:label="Track Driver"
         tools:layout="@layout/fragment_track_driver" />
     <fragment
         android:id="@+id/approvalFragment"
-        android:name="com.example.travcesadminpanelapp.ApprovalFragment"
+        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.ApprovalFragment"
         android:label="fragment_approval"
         tools:layout="@layout/fragment_approval" />
     <fragment
         android:id="@+id/rentCarFragment"
-        android:name="com.example.travcesadminpanelapp.RentCarFragment"
+        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.RentCarFragment"
         android:label="fragment_rent_car"
         tools:layout="@layout/fragment_rent_car" />
     <fragment
         android:id="@+id/assignedDriverFragment"
-        android:name="com.example.travcesadminpanelapp.AssignedDriverFragment"
+        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.AssignedDriverFragment"
         android:label="fragment_assigned_driver"
         tools:layout="@layout/fragment_assigned_driver" />
 </navigation>

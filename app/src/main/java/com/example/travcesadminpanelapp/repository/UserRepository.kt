@@ -18,7 +18,7 @@ class UserRepository(var context: Application) {
     @SuppressLint("CheckResult")
     fun login(phone: String, password: String, callback: UserDataSource.LoginCallback) {
         val params = LoginParams()
-        params.phone_email = phone
+        params.phone = phone
         params.password = password
 
         getApiService().login(params)

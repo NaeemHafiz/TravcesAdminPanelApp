@@ -2,7 +2,7 @@ package com.example.travcesadminpanelapp.data.remote.travces
 
 import com.example.travcesadminpanelapp.data.remote.base.ApiErrorResponse
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.LoginData
-import com.example.travcesadminpanelapp.data.remote.travces.model.response.GetChildResponse
+import com.example.travcesadminpanelapp.data.remote.travces.model.response.GetDriverResponse
 
 
 interface UserDataSource {
@@ -13,7 +13,7 @@ interface UserDataSource {
     }
 
     interface GetChildrenCallback {
-        fun onGetChildrenResponse(data: GetChildResponse)
+        fun onGetChildrenResponse(data: GetDriverResponse)
         fun onPayloadError(error: ApiErrorResponse)
     }
 

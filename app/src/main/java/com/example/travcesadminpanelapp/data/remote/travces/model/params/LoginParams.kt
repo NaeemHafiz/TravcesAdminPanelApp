@@ -2,6 +2,6 @@ package com.example.travcesadminpanelapp.data.remote.travces.model.params
 
 class
 LoginParams {
-    var phone_email: String = ""
+    var phone: String = ""
     var password: String = ""
 }
