@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+    <color name="colorTransWhite">#A3FFFFFF</color>
+    <color name="colorSignUpBlue">#3b5997</color>
+    <color name="colorLoginBlack">#113221</color>
+    <color name="colorWarning">#EE8657</color>
+    <color name="ef_white">#FFFFFF</color>
+
+
+    <color name="colorLightWhite">#E9E9E9</color>
+
+    <color name="non_active_color">#a3a3a3</color>
+
+    <color name="darkorange">#D2A547</color>
+    <color name="lightorange">#ffdaad</color>
+    <color name="buscolor">#FFD2A547</color>
+    <color name="blue">#0066cc</color>
+    <color name="gold">#e6b121</color>
+    <color name="grey">#cccccc</color>
+    <color name="RedGmail">#FFFF0202</color>
+    <color name="black">#000</color>
+</resources>
