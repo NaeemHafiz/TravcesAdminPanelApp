@@ -3,33 +3,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_home1">
+    android:background="@drawable/bg_home"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvDatanotFound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="Data Not Found"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 
     <LinearLayout
-        android:id="@+id/llEmptyDriver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@color/colorTransWhite"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:visibility="visible">
 
-        <TextView
-            android:id="@+id/tvNotFound"
-            style="@style/TextAppearance.AppCompat.Headline"
+        <androidx.recyclerview.widget.RecyclerView
+           android:id="@+id/rvDriverList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No Driver Found" />
-
-
+            tools:itemCount="3"
+            tools:listitem="@layout/row_item_drivers_list" />
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvTrackDrivers"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="visible"
-        tools:itemCount="3"
-        tools:listitem="@layout/row_item_drivers_list" />
-
 </FrameLayout>

@@ -12,6 +12,7 @@ import com.example.travcesadminpanelapp.data.sharedPreferences.AppPreferences
 import com.example.travcesadminpanelapp.utils.extensions.hideKeyboard
 import com.example.travcesadminpanelapp.view.activities.GlobalNavigationActivity
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
+import es.dmoral.toasty.Toasty
 import timber.log.Timber
 import java.io.File
 
@@ -22,7 +23,11 @@ abstract class BaseFragment : Fragment() {
     lateinit var dialog: ProgressDialog
     lateinit var appPreferences: AppPreferences
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(getLayoutId(), container, false)
     }
 
@@ -44,6 +49,18 @@ abstract class BaseFragment : Fragment() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
+    fun showErrorToast(message: String) {
+        Toasty.error(context!!, message, Toast.LENGTH_SHORT, true).show();
+    }
+
+    fun showSuccessToast(message: String) {
+        Toasty.success(context!!, message, Toast.LENGTH_SHORT, true).show();
+    }
+
+    fun showInfoToast(message: String) {
+        Toasty.info(context!!, message, Toast.LENGTH_SHORT, true).show();
+    }
+
     fun showToast(resId: Int) {
         Toast.makeText(context, resId, Toast.LENGTH_SHORT).show()
     }
@@ -61,6 +78,7 @@ abstract class BaseFragment : Fragment() {
                 dialog.dismiss()
         }
     }
+
     fun deleteFile(filePath: String) {
         val file = File(filePath)
         if (file.exists()) {
@@ -74,10 +92,12 @@ abstract class BaseFragment : Fragment() {
         } else
             logError("File not found!")
     }
+
     fun moveToGlobalNavigationActivity() {
         startActivity(GlobalNavigationActivity.Companion.getStartIntent(activity as BaseActivity))
         (activity as BaseActivity).finish()
     }
+
     override fun onPause() {
         super.onPause()
         if (view != null) {

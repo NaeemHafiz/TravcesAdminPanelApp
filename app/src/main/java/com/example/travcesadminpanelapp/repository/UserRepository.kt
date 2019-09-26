@@ -30,9 +30,9 @@ class UserRepository(var context: Application) {
                 })
     }
     @SuppressLint("CheckResult")
-    fun getChildren(driver_id: String, callback: UserDataSource.GetChildrenCallback) {
+    fun getDrivers(driver_id: String, callback: UserDataSource.GetChildrenCallback) {
 
-        getApiService().getChildren(driver_id)
+        getApiService().getDriver(driver_id)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ callback.onGetChildrenResponse(it) }

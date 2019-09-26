@@ -23,7 +23,7 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
     )
     var loginResponse: MutableLiveData<OneShotEvent<LoginData>> = MutableLiveData()
     var updateLocationResponse: MutableLiveData<OneShotEvent<Location>> = MutableLiveData()
-    var getChildrenResponse: MutableLiveData<OneShotEvent<GetDriverResponse>> = MutableLiveData()
+    var getDriverResponse: MutableLiveData<OneShotEvent<GetDriverResponse>> = MutableLiveData()
 
     fun login(phone: String, password: String) {
         showProgressBar(true)
@@ -92,13 +92,13 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
      fun stopLocationUpdates() {
         mFusedLocationClient!!.removeLocationUpdates(mLocationCallback)
     }
-    fun getChildren(driver_id: String) {
+    fun getDrivers(driver_type: String) {
         showProgressBar(true)
-        userRepository.getChildren(driver_id,
+        userRepository.getDrivers(driver_type,
             object : UserDataSource.GetChildrenCallback {
                 override fun onGetChildrenResponse(data: GetDriverResponse) {
                     showProgressBar(false)
-                    getChildrenResponse.value = OneShotEvent(data)
+                    getDriverResponse.value = OneShotEvent(data)
                 }
                 override fun onPayloadError(error: ApiErrorResponse) {
                     showProgressBar(false)

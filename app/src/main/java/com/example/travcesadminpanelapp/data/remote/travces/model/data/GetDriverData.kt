@@ -2,8 +2,12 @@ package com.example.travcesadminpanelapp.data.remote.travces.model.data
 
 class GetDriverData {
     var id: String = ""
-    var driver_name: String = ""
-    var driver_address: String = ""
-    var driver_phone: String = ""
+    var fname: String = ""
+    val lname: String = ""
+    var email: String = ""
+    var phone: String = ""
+    var address: String = ""
+    var cnic: String = ""
+    var driver_type: String = ""
 }
 
