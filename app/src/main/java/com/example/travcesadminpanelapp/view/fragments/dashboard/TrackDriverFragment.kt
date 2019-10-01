@@ -37,7 +37,7 @@ class TrackDriverFragment : BaseFragment(), DriverAdapter.Callback {
 
     override fun onItemClicked(pos: Int) {
         if (driverList[pos].is_online == "0") {
-            showToast("Driver is offline")
+            showInfoToast("Driver is offline")
             return
         }
         val args = Bundle()
