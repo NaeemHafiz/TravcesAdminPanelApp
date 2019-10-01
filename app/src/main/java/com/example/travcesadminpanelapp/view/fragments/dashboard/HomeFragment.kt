@@ -16,8 +16,6 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         cvTrack_driver.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_trackDriverFragment))
         cvRent_car.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_rentCarFragment))
-        cvApproval.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_approvalFragment))
-        assigned_car.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_assignedDriverFragment))
     }
 
 }

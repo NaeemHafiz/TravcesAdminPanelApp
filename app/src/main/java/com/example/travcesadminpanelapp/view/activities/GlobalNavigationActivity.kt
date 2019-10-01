@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.navigation.ui.NavigationUI
 import com.example.travcesadminpanelapp.R
+import com.example.travcesadminpanelapp.data.remote.puhser.MyPusherManager
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
 import com.example.travcesadminpanelapp.viewModel.HomeViewModel
 import kotlinx.android.synthetic.main.activity_global_navigation.*
@@ -30,6 +31,7 @@ class GlobalNavigationActivity : BaseActivity() {
         setContentView(R.layout.activity_global_navigation)
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
         initNavigation()
+        MyPusherManager.instance.connect()
     }
 
 

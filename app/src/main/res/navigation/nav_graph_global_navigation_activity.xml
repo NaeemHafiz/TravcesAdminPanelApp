@@ -14,14 +14,8 @@
             android:id="@+id/action_homeFragment_to_trackDriverFragment"
             app:destination="@id/trackDriverFragment" />
         <action
-            android:id="@+id/action_homeFragment_to_approvalFragment"
-            app:destination="@id/approvalFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_rentCarFragment"
             app:destination="@id/rentCarFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_assignedDriverFragment"
-            app:destination="@id/assignedDriverFragment" />
     </fragment>
     <fragment
         android:id="@+id/trackDriverFragment"
@@ -29,24 +23,18 @@
         android:label="Track Driver"
         tools:layout="@layout/fragment_track_driver">
         <action
-            android:id="@+id/action_trackDriverFragment_to_driverMapFragment2"
+            android:id="@+id/action_trackDriverFragment_to_driverMapFragment"
             app:destination="@id/driverMapFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/approvalFragment"
-        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.ApprovalFragment"
-        android:label="fragment_approval"
-        tools:layout="@layout/fragment_approval" />
     <fragment
         android:id="@+id/rentCarFragment"
         android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.RentCarFragment"
         android:label="Rent Car Drivers"
-        tools:layout="@layout/fragment_rent_car" />
-    <fragment
-        android:id="@+id/assignedDriverFragment"
-        android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.AssignedDriverFragment"
-        android:label="fragment_assigned_driver"
-        tools:layout="@layout/fragment_assigned_driver" />
+        tools:layout="@layout/fragment_rent_car" >
+        <action
+            android:id="@+id/action_rentCarFragment_to_driverMapFragment"
+            app:destination="@id/driverMapFragment" />
+    </fragment>
     <fragment
         android:id="@+id/driverMapFragment"
         android:name="com.example.travcesadminpanelapp.view.fragments.dashboard.DriverMapFragment"

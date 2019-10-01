@@ -9,21 +9,30 @@ import com.example.travcesadminpanelapp.data.remote.travces.UserDataSource
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.LoginData
 import com.example.travcesadminpanelapp.data.remote.travces.model.response.GetDriverResponse
 import com.example.travcesadminpanelapp.repository.UserRepository
+import com.example.travcesadminpanelapp.utils.extensions.ERROR_CODE_EMPTY_PASSWORD
+import com.example.travcesadminpanelapp.utils.extensions.ERROR_CODE_EMPTY_PHONE_FIELD
 import com.example.travcesadminpanelapp.utils.extensions.OneShotEvent
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
 import com.google.android.gms.location.*
-import com.example.travcesadminpanelapp.utils.extensions.ERROR_CODE_EMPTY_PASSWORD
-import com.example.travcesadminpanelapp.utils.extensions.ERROR_CODE_EMPTY_PHONE_FIELD
 
 class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
 
     private val UPDATE_INTERVAL = (10 * 1000).toLong()  /* 10 secs */
     private val FASTEST_INTERVAL: Long = 2000 /* 2 sec */
-    var userRepository: UserRepository = UserRepository(context
-    )
+    var userRepository: UserRepository = UserRepository(context)
+    var locationResponse: MutableLiveData<OneShotEvent<Location>> = MutableLiveData()
     var loginResponse: MutableLiveData<OneShotEvent<LoginData>> = MutableLiveData()
     var updateLocationResponse: MutableLiveData<OneShotEvent<Location>> = MutableLiveData()
     var getDriverResponse: MutableLiveData<OneShotEvent<GetDriverResponse>> = MutableLiveData()
+
+
+    fun getCurrentLocation(activity: BaseActivity) {
+        val mFusedLocationClient: FusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient((activity))
+        mFusedLocationClient.lastLocation.addOnSuccessListener((activity)) { location ->
+            locationResponse.value = OneShotEvent(location)
+        }
+    }
 
     fun login(phone: String, password: String) {
         showProgressBar(true)
@@ -52,16 +61,20 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
 
     fun sendCoordinates(userId: String, latitude: String, longitude: String) {
         showProgressBar(false)
-        userRepository.sendCoordinates(userId, latitude,longitude, object : UserDataSource.SendCoordinatesCallback {
-            override fun onSendCoordinatesResponse(message: String) {
+        userRepository.sendCoordinates(
+            userId,
+            latitude,
+            longitude,
+            object : UserDataSource.SendCoordinatesCallback {
+                override fun onSendCoordinatesResponse(message: String) {
 
-            }
+                }
 
-            override fun onPayloadError(error: ApiErrorResponse) {
-                showProgressBar(false)
-                showSnackbarMessage(error.message)
-            }
-        })
+                override fun onPayloadError(error: ApiErrorResponse) {
+                    showProgressBar(false)
+                    showSnackbarMessage(error.message)
+                }
+            })
     }
 
     private var mFusedLocationClient: FusedLocationProviderClient? = null
@@ -84,14 +97,15 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
         settingsClient.checkLocationSettings(locationSettingsRequest)
 
         mFusedLocationClient!!.requestLocationUpdates(
-            mLocationRequest, mLocationCallback ,
+            mLocationRequest, mLocationCallback,
             Looper.myLooper()
         )
     }
 
-     fun stopLocationUpdates() {
+    fun stopLocationUpdates() {
         mFusedLocationClient!!.removeLocationUpdates(mLocationCallback)
     }
+
     fun getDrivers(driver_type: String) {
         showProgressBar(true)
         userRepository.getDrivers(driver_type,
@@ -100,6 +114,7 @@ class UserViewModel(context: Application) : BaseAndroidViewModel(context) {
                     showProgressBar(false)
                     getDriverResponse.value = OneShotEvent(data)
                 }
+
                 override fun onPayloadError(error: ApiErrorResponse) {
                     showProgressBar(false)
                     showSnackbarMessage(error.message)

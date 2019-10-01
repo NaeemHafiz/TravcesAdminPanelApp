@@ -1,6 +1,8 @@
 package com.example.travcesadminpanelapp.data.remote.travces.model.data
 
-class GetDriverData {
+import java.io.Serializable
+
+class GetDriverData : Serializable {
     var id: String = ""
     var fname: String = ""
     val lname: String = ""
@@ -8,6 +10,6 @@ class GetDriverData {
     var phone: String = ""
     var address: String = ""
     var cnic: String = ""
-    var driver_type: String = ""
+    var is_online: String = ""
 }
 

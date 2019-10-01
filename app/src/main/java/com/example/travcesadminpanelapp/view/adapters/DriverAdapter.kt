@@ -42,13 +42,12 @@ class DriverAdapter(
         var tvStatus = itemView.findViewById(R.id.tvStatus) as TextView
         var cvItem = itemView.findViewById(R.id.cvitemClick) as CardView
 
-
         @SuppressLint("SetTextI18n")
         fun bind(pos: Int) {
             tvDriverName.text = "${driverList[pos].fname}${driverList[pos].lname}"
             tvAddress.text = driverList[pos].address
             tvPhone.text = driverList[pos].phone
-            tvStatus.text = "Pending"
+            tvStatus.text = if (driverList[pos].is_online == "0") "Offline" else "On Track"
             initClickListeners()
         }
 
@@ -64,7 +63,5 @@ class DriverAdapter(
 
     interface Callback {
         fun onItemClicked(pos: Int)
-        fun onDeleteClicked(pos: Int)
-        fun oncvItemClicked(pos: Int)
     }
 }

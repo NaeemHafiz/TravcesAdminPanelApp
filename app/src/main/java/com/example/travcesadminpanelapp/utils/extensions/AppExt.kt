@@ -21,6 +21,8 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import java.text.SimpleDateFormat
 import java.util.*
 
+val TYPE_SCHOOL_DRIVER = "1"
+val TYPE_RENT_A_CAR_DRIVER = "0"
 fun isEmailValid(target: CharSequence): Boolean {
     return !TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches()
 }
