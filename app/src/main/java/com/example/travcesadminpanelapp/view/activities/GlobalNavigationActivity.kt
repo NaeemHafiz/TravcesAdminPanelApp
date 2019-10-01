@@ -56,15 +56,7 @@ class GlobalNavigationActivity : BaseActivity() {
         tvFullName.text =
             "${appPreferences.getUser().user.fname} ${appPreferences.getUser().user.lname}"
         tvDriverNumber.text = appPreferences.getUser().user.phone
-        val swOnline = nav_view.getHeaderView(0).findViewById<SwitchCompat>(R.id.swStatus)
-        swOnline.isChecked = false
 
-        swOnline.setOnCheckedChangeListener { buttonView, isChecked ->
-            homeViewModel.changeOnlineStatus(
-                appPreferences.getUser().user.id.toString(),
-                if (isChecked) "1" else "0"
-            )
-        }
     }
 
     private var flagDoubleBackToExitPressedOnce = false
