@@ -23,7 +23,7 @@ TravcesRetroFitClientInstance(ctx: Context) {
     // TODO : Replace this with app's original base url...
     private val PROD_BASE_URL = "http://travces.com/travces/public/api/"
     private val DEV_BASE_URL = "http://192.168.10.8:8080/travces/public/api/"
-    private val BASE_URL = DEV_BASE_URL
+    private val BASE_URL = PROD_BASE_URL
 
     init {
         if (retrofit == null) {
