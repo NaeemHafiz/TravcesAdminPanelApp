@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.travcesadminpanelapp.R
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.GetDriverData
 import com.example.travcesadminpanelapp.utils.extensions.TYPE_RENT_A_CAR_DRIVER
-import com.example.travcesadminpanelapp.utils.extensions.TYPE_SCHOOL_DRIVER
 import com.example.travcesadminpanelapp.view.activities.GlobalNavigationActivity
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
 import com.example.travcesadminpanelapp.view.adapters.DriverAdapter
@@ -80,10 +79,8 @@ class RentCarFragment : BaseFragment(), DriverAdapter.Callback {
         val args = Bundle()
         args.putSerializable(DriverMapFragment.Companion.KEY_DRIVER, driverList[pos])
         (activity as GlobalNavigationActivity).navController.navigate(
-            R.id.action_trackDriverFragment_to_driverMapFragment,
+            R.id.action_rentCarFragment_to_driverMapFragment,
             args
         )
-
-
     }
 }

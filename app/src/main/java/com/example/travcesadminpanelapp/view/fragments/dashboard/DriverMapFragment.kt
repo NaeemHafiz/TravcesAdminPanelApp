@@ -13,6 +13,8 @@ import com.example.travcesadminpanelapp.data.remote.puhser.EVENT_NAME_LOCATION_U
 import com.example.travcesadminpanelapp.data.remote.puhser.MyPusherManager
 import com.example.travcesadminpanelapp.data.remote.puhser.model.PusherEvent
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.GetDriverData
+import com.example.travcesadminpanelapp.utils.extensions.LatLngInterpolator
+import com.example.travcesadminpanelapp.utils.extensions.animateMarker
 import com.example.travcesadminpanelapp.utils.extensions.isLocationEnabled
 import com.example.travcesadminpanelapp.utils.rxBus.RxBus
 import com.example.travcesadminpanelapp.view.activities.GlobalNavigationActivity
@@ -23,10 +25,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.json.JSONObject
@@ -37,7 +36,7 @@ class DriverMapFragment : BaseFragment(), OnMapReadyCallback {
     lateinit var mMap: GoogleMap
     lateinit var userViewModel: UserViewModel
     lateinit var driverObj: GetDriverData
-
+    var marker: Marker? = null
     private fun getMyArguments() {
         val args = arguments
         if (args != null) {
@@ -45,6 +44,7 @@ class DriverMapFragment : BaseFragment(), OnMapReadyCallback {
                 (args.getSerializable(Companion.KEY_DRIVER)!! as GetDriverData)
         }
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val mapFragment = childFragmentManager
@@ -121,19 +121,21 @@ class DriverMapFragment : BaseFragment(), OnMapReadyCallback {
         val jsonObject = JSONObject(data)
         val lat: Double = jsonObject.getString("latitude").toDouble()
         val lon: Double = jsonObject.getString("longitude").toDouble()
-        Log.d("EVENT_TRIGGER", "Latitude:" + lat)
-        Log.d("EVENT_TRIGGER", "Longitude:" + lon)
         (activity as GlobalNavigationActivity).runOnUiThread {
             val driverPos = LatLng(lat, lon)
-            val marker = mMap.addMarker(
-                MarkerOptions().position(driverPos)
-                    .title("Driver")
-                    .icon(
-                        BitmapDescriptorFactory
-                            .fromResource(R.drawable.taxi)
-                    )
-            )
-            zoomWithAnimateCamera(driverPos)
+            if (marker == null) {
+                marker = mMap.addMarker(
+                    MarkerOptions().position(driverPos)
+                        .title("Driver")
+                        .icon(
+                            BitmapDescriptorFactory
+                                .fromResource(R.drawable.taxi)
+                        )
+                )
+            }else{
+                animateMarker(marker!!,driverPos,LatLngInterpolator.Spherical)
+            }
+//            zoomWithAnimateCamera(driverPos)
         }
     }
 

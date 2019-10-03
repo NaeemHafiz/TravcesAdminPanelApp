@@ -2,15 +2,20 @@ package com.example.travcesadminpanelapp.utils.extensions
 
 import android.Manifest
 import android.content.Context
+import android.os.Handler
+import android.os.SystemClock
 import android.text.TextUtils
 import android.util.Patterns
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.karumi.dexter.Dexter
 import com.karumi.dexter.MultiplePermissionsReport
 import com.karumi.dexter.PermissionToken
@@ -18,8 +23,10 @@ import com.karumi.dexter.listener.PermissionDeniedResponse
 import com.karumi.dexter.listener.PermissionGrantedResponse
 import com.karumi.dexter.listener.PermissionRequest
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener
+import java.lang.Math.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 val TYPE_SCHOOL_DRIVER = "1"
 val TYPE_RENT_A_CAR_DRIVER = "0"
@@ -73,6 +80,7 @@ fun isLocationEnabled(activity: BaseActivity): Boolean {
 
     return isGranted && isGrantedCoarse
 }
+
 fun allFieldsFilled(vararg fields: String): Boolean {
 
     fields.forEach {
@@ -146,6 +154,87 @@ fun getFormatedDateTime(
     }
 
     return formattedDate
+}
+
+fun animateMarker(
+    marker: Marker,
+    finalPosition: LatLng, latLngInterpolator: LatLngInterpolator
+
+) {
+    val startPosition = marker.getPosition()
+    val handler = Handler()
+    val start = SystemClock.uptimeMillis()
+    val interpolator = AccelerateDecelerateInterpolator()
+    val durationInMs = 2000f
+    handler.post(object : Runnable {
+        var elapsed: Long = 0
+        var t: Float = 0.toFloat()
+        var v: Float = 0.toFloat()
+        override fun run() {
+            // Calculate progress using interpolator
+            elapsed = SystemClock.uptimeMillis() - start
+            t = elapsed / durationInMs
+            v = interpolator.getInterpolation(t)
+            marker.setPosition(latLngInterpolator.interpolate(v, startPosition, finalPosition))
+            // Repeat till progress is complete.
+            if (t < 1) {
+                // Post again 16ms later.
+                handler.postDelayed(this, 16)
+            }
+        }
+    })
+
+}
+
+interface LatLngInterpolator {
+    fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng
+    object Spherical : LatLngInterpolator {
+        /* From github.com/googlemaps/android-maps-utils */
+        override fun interpolate(fraction: Float, from: LatLng, to: LatLng): LatLng {
+            // http://en.wikipedia.org/wiki/Slerp
+            val fromLat = toRadians(from.latitude)
+            val fromLng = toRadians(from.longitude)
+            val toLat = toRadians(to.latitude)
+            val toLng = toRadians(to.longitude)
+            val cosFromLat = cos(fromLat)
+            val cosToLat = cos(toLat)
+            // Computes Spherical interpolation coefficients.
+            val angle = computeAngleBetween(fromLat, fromLng, toLat, toLng)
+            val sinAngle = sin(angle)
+            if (sinAngle < 1E-6) {
+                return from
+            }
+            val a = sin((1 - fraction) * angle) / sinAngle
+            val b = sin(fraction * angle) / sinAngle
+            // Converts from polar to vector and interpolate.
+            val x = a * cosFromLat * cos(fromLng) + b * cosToLat * cos(toLng)
+            val y = a * cosFromLat * sin(fromLng) + b * cosToLat * sin(toLng)
+            val z = a * sin(fromLat) + b * sin(toLat)
+            // Converts interpolated vector back to polar.
+            val lat = atan2(z, sqrt(x * x + y * y))
+            val lng = atan2(y, x)
+            return LatLng(toDegrees(lat), toDegrees(lng))
+        }
+
+        private fun computeAngleBetween(
+            fromLat: Double,
+            fromLng: Double,
+            toLat: Double,
+            toLng: Double
+        ): Double {
+            // Haversine's formula
+            val dLat = fromLat - toLat
+            val dLng = fromLng - toLng
+            return 2 * asin(
+                sqrt(
+                    pow(
+                        sin(dLat / 2),
+                        2.0
+                    ) + cos(fromLat) * cos(toLat) * pow(sin(dLng / 2), 2.0)
+                )
+            )
+        }
+    }
 }
 
 fun getRequestCode(): Int {
