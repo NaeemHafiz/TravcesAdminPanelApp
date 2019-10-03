@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.travcesadminpanelapp.R
 import com.example.travcesadminpanelapp.data.remote.travces.model.data.GetDriverData
+import com.example.travcesadminpanelapp.utils.extensions.TYPE_SCHOOL_DRIVER
 import com.example.travcesadminpanelapp.view.activities.GlobalNavigationActivity
 import com.example.travcesadminpanelapp.view.activities.base.BaseActivity
 import com.example.travcesadminpanelapp.view.adapters.DriverAdapter
@@ -25,8 +26,7 @@ class TrackDriverFragment : BaseFragment(), DriverAdapter.Callback {
         super.onViewCreated(view, savedInstanceState)
         attachViewModel()
         initDriverAdapter()
-        var driver_type = 1
-        userViewModel.getDrivers(driver_type.toString())
+        userViewModel.getDrivers(TYPE_SCHOOL_DRIVER)
     }
 
     private fun initDriverAdapter() {
@@ -35,22 +35,17 @@ class TrackDriverFragment : BaseFragment(), DriverAdapter.Callback {
         rvDriverList.adapter = driveradapter
     }
 
-    override fun onDeleteClicked(pos: Int) {
-    }
-
-    override fun oncvItemClicked(pos: Int) {
-    }
-
     override fun onItemClicked(pos: Int) {
-
-        (activity as GlobalNavigationActivity).navController.navigate(R.id.action_trackDriverFragment_to_driverMapFragment2)
-
-//        val args = Bundle()
-//        args.putSerializable(AddChildFragment.Companion.KEY_CHILD, childrenList[pos])
-//        (activity as GlobalNavigationActivity).navController.navigate(
-//            com.mtech.travces.R.id.action_viewChildrenFragment_to_addChildFragment,
-//            args
-//        )
+        if (driverList[pos].is_online == "0") {
+            showInfoToast("Driver is offline")
+            return
+        }
+        val args = Bundle()
+        args.putSerializable(DriverMapFragment.Companion.KEY_DRIVER, driverList[pos])
+        (activity as GlobalNavigationActivity).navController.navigate(
+            R.id.action_trackDriverFragment_to_driverMapFragment,
+            args
+        )
     }
 
     private fun attachViewModel() {
@@ -86,5 +81,7 @@ class TrackDriverFragment : BaseFragment(), DriverAdapter.Callback {
             })
         }
     }
+
+
 }
 
