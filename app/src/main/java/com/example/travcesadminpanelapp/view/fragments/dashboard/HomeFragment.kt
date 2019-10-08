@@ -10,12 +10,12 @@ import kotlinx.android.synthetic.main.fragment_home.*
 
 
 class HomeFragment : BaseFragment() {
-    override fun getLayoutId(): Int = R.layout.fragment_home
+  override fun getLayoutId(): Int = R.layout.fragment_home
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        cvTrack_driver.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_trackDriverFragment))
-        cvRent_car.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_rentCarFragment))
-    }
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    cvTrack_driver.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_trackDriverFragment))
+    cvRent_car.setOnClickListener(Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_rentCarFragment))
+  }
 
 }

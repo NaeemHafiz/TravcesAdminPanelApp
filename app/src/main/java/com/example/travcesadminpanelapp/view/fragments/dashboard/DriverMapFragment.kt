@@ -32,131 +32,131 @@ import org.json.JSONObject
 
 class DriverMapFragment : BaseFragment(), OnMapReadyCallback {
 
-    override fun getLayoutId(): Int = R.layout.fragment_driver_map
-    lateinit var mMap: GoogleMap
-    lateinit var userViewModel: UserViewModel
-    lateinit var driverObj: GetDriverData
-    var marker: Marker? = null
-    private fun getMyArguments() {
-        val args = arguments
-        if (args != null) {
-            if (args.containsKey(Companion.KEY_DRIVER)) driverObj =
-                (args.getSerializable(Companion.KEY_DRIVER)!! as GetDriverData)
-        }
+  override fun getLayoutId(): Int = R.layout.fragment_driver_map
+  lateinit var mMap: GoogleMap
+  lateinit var userViewModel: UserViewModel
+  lateinit var driverObj: GetDriverData
+  var marker: Marker? = null
+  private fun getMyArguments() {
+    val args = arguments
+    if (args != null) {
+      if (args.containsKey(Companion.KEY_DRIVER)) driverObj =
+              (args.getSerializable(Companion.KEY_DRIVER)!! as GetDriverData)
     }
+  }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        val mapFragment = childFragmentManager
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    val mapFragment = childFragmentManager
             .findFragmentById(R.id.googleMap) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        getMyArguments()
-        registerWithRXBus()
-        attachViewModel()
+    mapFragment.getMapAsync(this)
+    getMyArguments()
+    registerWithRXBus()
+    attachViewModel()
 
+  }
+
+
+  override fun onMapReady(googleMap: GoogleMap) {
+    mMap = googleMap
+    if (isLocationEnabled((activity as BaseActivity))) {
+      userViewModel.getCurrentLocation(activity as BaseActivity)
     }
 
+  }
 
-    override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
-        if (isLocationEnabled((activity as BaseActivity))) {
-            userViewModel.getCurrentLocation(activity as BaseActivity)
-        }
+  private fun setupMap(location: Location) {
+    mMap.isMyLocationEnabled = true
+    val currentLatLng = LatLng(location.latitude, location.longitude)
+    zoomWithAnimateCamera(currentLatLng)
+  }
 
-    }
-
-    private fun setupMap(location: Location) {
-        mMap.isMyLocationEnabled = true
-        val currentLatLng = LatLng(location.latitude, location.longitude)
-        zoomWithAnimateCamera(currentLatLng)
-    }
-
-    private fun zoomWithAnimateCamera(location: LatLng) {
-        val cameraPosition: CameraPosition = CameraPosition.Builder()
+  private fun zoomWithAnimateCamera(location: LatLng) {
+    val cameraPosition: CameraPosition = CameraPosition.Builder()
             .target(location)
             .zoom(17f).build()
-        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
+    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
 
+  }
+
+  private fun attachViewModel() {
+    userViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
+    with(userViewModel) {
+      snackbarMessage.observe(viewLifecycleOwner, Observer {
+        val msg = it?.getContentIfNotHandled()
+        if (!msg.isNullOrEmpty()) showErrorToast(msg)
+      })
+      progressBar.observe(viewLifecycleOwner, Observer {
+        val show = it?.getContentIfNotHandled()
+        if (show != null)
+          showProgressDialog(show)
+      })
+
+      locationResponse.observe(viewLifecycleOwner, Observer {
+        val show = it?.getContentIfNotHandled()
+        if (show != null) setupMap(show)
+      })
     }
-
-    private fun attachViewModel() {
-        userViewModel = ViewModelProviders.of(this).get(UserViewModel::class.java)
-        with(userViewModel) {
-            snackbarMessage.observe(viewLifecycleOwner, Observer {
-                val msg = it?.getContentIfNotHandled()
-                if (!msg.isNullOrEmpty()) showErrorToast(msg)
-            })
-            progressBar.observe(viewLifecycleOwner, Observer {
-                val show = it?.getContentIfNotHandled()
-                if (show != null)
-                    showProgressDialog(show)
-            })
-
-            locationResponse.observe(viewLifecycleOwner, Observer {
-                val show = it?.getContentIfNotHandled()
-                if (show != null) setupMap(show)
-            })
-        }
-    }
+  }
 
 
-    @SuppressLint("CheckResult", "LogNotTimber")
-    private fun registerWithRXBus() {
-        RxBus.defaultInstance().toObservable()
+  @SuppressLint("CheckResult", "LogNotTimber")
+  private fun registerWithRXBus() {
+    RxBus.defaultInstance().toObservable()
             .observeOn(Schedulers.io())
             .subscribeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                if (it is PusherEvent) {
-                    when (it.eventName) {
-                        EVENT_NAME_LOCATION_UPDATE -> {
-                            simulateMap(it.data)
-                            Log.d("EVENT_TRIGGER", it.data)
-                        }
-                    }
+              if (it is PusherEvent) {
+                when (it.eventName) {
+                  EVENT_NAME_LOCATION_UPDATE -> {
+                    simulateMap(it.data)
+                    Log.d("EVENT_TRIGGER", it.data)
+                  }
                 }
+              }
             }, Throwable::printStackTrace)
-    }
+  }
 
-    private fun simulateMap(data: String) {
-        val jsonObject = JSONObject(data)
-        val lat: Double = jsonObject.getString("latitude").toDouble()
-        val lon: Double = jsonObject.getString("longitude").toDouble()
-        (activity as GlobalNavigationActivity).runOnUiThread {
-            val driverPos = LatLng(lat, lon)
-            if (marker == null) {
-                marker = mMap.addMarker(
-                    MarkerOptions().position(driverPos)
+  private fun simulateMap(data: String) {
+    val jsonObject = JSONObject(data)
+    val lat: Double = jsonObject.getString("latitude").toDouble()
+    val lon: Double = jsonObject.getString("longitude").toDouble()
+    (activity as GlobalNavigationActivity).runOnUiThread {
+      val driverPos = LatLng(lat, lon)
+      if (marker == null) {
+        marker = mMap.addMarker(
+                MarkerOptions().position(driverPos)
                         .title("Driver")
                         .icon(
-                            BitmapDescriptorFactory
-                                .fromResource(R.drawable.taxi)
+                                BitmapDescriptorFactory
+                                        .fromResource(R.drawable.taxi)
                         )
-                )
-            }else{
-                animateMarker(marker!!,driverPos,LatLngInterpolator.Spherical)
-            }
-//            zoomWithAnimateCamera(driverPos)
-        }
-    }
-
-
-    object Companion {
-        @JvmStatic
-        val TAG: String = DriverMapFragment::class.java.simpleName
-        @JvmStatic
-        val KEY_DRIVER = "driver"
-    }
-
-
-    override fun onResume() {
-        super.onResume()
-        MyPusherManager.instance.subscribeToPrivateLocationUpdateChannelPusher(
-            driverObj.id
         )
+      }else{
+        animateMarker(marker!!,driverPos,LatLngInterpolator.Spherical)
+      }
+//            zoomWithAnimateCamera(driverPos)
     }
+  }
 
-    override fun onPause() {
-        super.onPause()
-        MyPusherManager.instance.unsubscribeToPrivateLocationUpdateChannelPusher()
-    }
+
+  object Companion {
+    @JvmStatic
+    val TAG: String = DriverMapFragment::class.java.simpleName
+    @JvmStatic
+    val KEY_DRIVER = "driver"
+  }
+
+
+  override fun onResume() {
+    super.onResume()
+    MyPusherManager.instance.subscribeToPrivateLocationUpdateChannelPusher(
+            driverObj.id
+    )
+  }
+
+  override fun onPause() {
+    super.onPause()
+    MyPusherManager.instance.unsubscribeToPrivateLocationUpdateChannelPusher()
+  }
 }

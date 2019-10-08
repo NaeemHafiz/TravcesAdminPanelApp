@@ -43,8 +43,8 @@ class TrackDriverFragment : BaseFragment(), DriverAdapter.Callback {
         val args = Bundle()
         args.putSerializable(DriverMapFragment.Companion.KEY_DRIVER, driverList[pos])
         (activity as GlobalNavigationActivity).navController.navigate(
-            R.id.action_trackDriverFragment_to_driverMapFragment,
-            args
+                R.id.action_trackDriverFragment_to_driverMapFragment,
+                args
         )
     }
 
